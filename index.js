@@ -27,6 +27,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try{
         const serviceCollection=client.db('Rooftop-doctor').collection('services')
+
+        // read all service data 
+        app.get('/services', async(req, res)=>{
+            const querry={}
+            const cursor=serviceCollection.find(querry)
+            const services=await cursor.toArray()
+            res.send(services)
+        })
     }
     finally{
 
