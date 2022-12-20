@@ -28,8 +28,15 @@ async function run(){
     try{
         const serviceCollection=client.db('Rooftop-doctor').collection('services')
 
-        // read all service data 
+        // read limited services for home page
         app.get('/services', async(req, res)=>{
+            const querry={}
+            const cursor=serviceCollection.find(querry)
+            const services=await cursor.limit(3).toArray()
+            res.send(services)
+        })
+        // read all services for services page
+        app.get('/allservices', async(req, res)=>{
             const querry={}
             const cursor=serviceCollection.find(querry)
             const services=await cursor.toArray()
