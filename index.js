@@ -46,7 +46,8 @@ async function run(){
         app.get('/services/:id', async(req, res)=>{
             const id=req.params.id
             const querry={_id:ObjectId(id)}
-            
+            const service=await serviceCollection.findOne(querry)
+            res.send(service)
         })
     }
     finally{
