@@ -32,7 +32,7 @@ async function run(){
         app.get('/services', async(req, res)=>{
             const querry={}
             const cursor=serviceCollection.find(querry)
-            const services=await cursor.limit(3).toArray()
+            const services=await cursor.sort({ $natural: -1 }).limit(3).toArray()
             res.send(services)
         })
         // read all services for services page
@@ -52,6 +52,7 @@ async function run(){
          // post service
          app.post('/service' , async(req, res)=>{
             const service=req.body
+            console.log(service);
             const result=await serviceCollection.insertOne(service)
             res.send(service)
         })
