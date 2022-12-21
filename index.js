@@ -43,7 +43,7 @@ async function run(){
             const services=await cursor.toArray()
             res.send(services)
         })
-        // read one service by id
+        // read one service by id for service detail page
         app.get('/services/:id', async(req, res)=>{
             const id=req.params.id
             const querry={_id:ObjectId(id)}
@@ -64,11 +64,32 @@ async function run(){
         })
         // read reviews
         app.get('/reviews', async(req, res)=>{
-            const querry={}
-            const cursor=reviewCollection.find(querry)
+            let query={}
+            // filterd by service name for service detail page
+            if (req.query.name) {
+                query={
+                    serviceName:req.query.name
+                }
+            }
+            // filterd by user email for my reviews  page
+
+            if (req.query.email) {
+                query={
+                    userEmail:req.query.email
+                }
+            }
+            const cursor=reviewCollection.find(query)
             const reviews=await cursor.toArray()
-            res.send(reviews)
+                res.send(reviews)
         })
+        // delete review
+        app.delete('/reviews/:id',async(req,res)=>{
+            const id=req.params.id
+            const query={_id:ObjectId(id)}
+            const result=await reviewCollection.deleteOne(query)
+            res.send(result)
+        })
+       
     }
     finally{
 
