@@ -56,6 +56,20 @@ async function run(){
             const result=await serviceCollection.insertOne(service)
             res.send(service)
         })
+        // update rating of service 
+        app.put('/services/:id',async(req, res)=>{
+            const id=req.params.id
+            const query={_id:ObjectId(id)}
+            const data=req.body
+            const option={upsert:true}
+            const updatedRating={
+                $set:{
+                  ratings:data.serviceRating
+                }
+            }
+            const result=await serviceCollection.updateOne(query, updatedRating, option)
+            res.send(result)
+        })
         // post review
         app.post('/reviews' , async(req, res)=>{
             const reviews=req.body
@@ -65,13 +79,13 @@ async function run(){
         // read reviews
         app.get('/reviews', async(req, res)=>{
             let query={}
-            // filterd by service name for service detail page
+            // filter by service name for service detail page
             if (req.query.name) {
                 query={
                     serviceName:req.query.name
                 }
             }
-            // filterd by user email for my reviews  page
+            // filter by user email for my reviews  page
 
             if (req.query.email) {
                 query={
@@ -81,6 +95,20 @@ async function run(){
             const cursor=reviewCollection.find(query)
             const reviews=await cursor.toArray()
                 res.send(reviews)
+        })
+        // update review 
+        app.put('/reviews/:id',async(req, res)=>{
+            const id=req.params.id
+            const query={_id:ObjectId(id)}
+            const user=req.body
+            const option={upsert:true}
+            const updatedReview={
+                $set:{
+                   userReview:user.review
+                }
+            }
+            const result=await reviewCollection.updateOne(query, updatedReview, option)
+            res.send(result)
         })
         // delete review
         app.delete('/reviews/:id',async(req,res)=>{
